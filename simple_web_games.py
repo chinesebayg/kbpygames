@@ -9,6 +9,7 @@ import socketserver
 import json
 import urllib.parse
 import random
+import os
 from datetime import datetime
 
 # RPG战斗游戏类定义
@@ -341,7 +342,7 @@ class GameHandler(http.server.SimpleHTTPRequestHandler):
 
 
 def main():
-    PORT = 8000
+    PORT = int(os.environ.get('PORT', 8000))
     
     with socketserver.TCPServer(("", PORT), GameHandler) as httpd:
         print(f"🎮 游戏服务器启动成功！")
