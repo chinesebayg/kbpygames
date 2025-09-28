@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>洞穴探险</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin: 0;
+        }
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav a {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        .game-status {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .game-status h4 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+            font-size: 1.3em;
+        }
+        .game-status.success {
+            background: #e8f5e8;
+            border-color: #4caf50;
+        }
+        .game-status.success h4 {
+            color: #388e3c;
+        }
+        .game-status.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+        .game-status.warning h4 {
+            color: #f57c00;
+        }
+        .choice-buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .choice-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            margin: 10px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        .choice-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .choice-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .progress-container {
+            margin: 30px 0;
+        }
+        .progress {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 25px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .progress-text {
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        .game-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .game-info h5 {
+            color: #495057;
+            margin-top: 0;
+        }
+        .game-info ul {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏔️ 洞穴探险</h1>
+        </div>
+        
+        <div class="nav">
+            <a href="/">🏠 首页</a>
+            <a href="/rpg">⚔️ RPG战斗</a>
+            <a href="/cave">🏔️ 洞穴探险</a>
+        </div>
+        
+        <div id="game-status" class="game-status">
+            <h4 id="game-message">准备开始你的冒险...</h4>
+        </div>
+        
+        <div id="game-progress" class="progress-container hidden">
+            <div class="progress">
+                <div id="progress-bar" class="progress-bar" style="width: 0%;">0%</div>
+            </div>
+            <div class="progress-text">你的冒险进度</div>
+        </div>
+        
+        <div id="choice-buttons" class="choice-buttons">
+            <button id="start-game" class="choice-btn">🚀 开始游戏</button>
+        </div>
+        
+        <div class="game-info">
+            <h5>📖 游戏说明</h5>
+            <ul>
+                <li><strong>选择方向</strong>：向左或向右探索洞穴</li>
+                <li><strong>选择动作</strong>：坐下或站起来</li>
+                <li><strong>寻找魔法石</strong>：只有正确的选择组合才能找到魔法石</li>
+                <li><strong>成为魔法师</strong>：完成冒险成为强大的魔法师！</li>
+            </ul>
+            <p style="color: #ff9800; font-weight: bold;">
+                💡 提示：不同的选择组合会带来不同的结果，试试不同的路径吧！
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let gameState = null;
+        let gameId = null;
+
+        async function initGame() {
+            try {
+                const response = await fetch('/api/cave/init', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                gameState = await response.json();
+                gameId = gameState.game_id;
+                updateGameDisplay();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('初始化游戏失败！');
+            }
+        }
+
+        async function makeChoice(choice) {
+            if (!gameState || !gameId) return;
+            
+            try {
+                const response = await fetch('/api/cave/make_choice', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        game_id: gameId,
+                        choice: choice
+                    })
+                });
+                
+                gameState = await response.json();
+                updateGameDisplay();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('操作失败！');
+            }
+        }
+
+        function updateGameDisplay() {
+            if (!gameState) return;
+            
+            const messageElement = document.getElementById('game-message');
+            const buttonsContainer = document.getElementById('choice-buttons');
+            const progressContainer = document.getElementById('game-progress');
+            const statusElement = document.querySelector('.game-status');
+            
+            messageElement.textContent = gameState.message;
+            
+            updateProgress();
+            progressContainer.classList.remove('hidden');
+            
+            updateStatusStyle(statusElement);
+            
+            buttonsContainer.innerHTML = '';
+            
+            if (gameState.choices.includes('restart')) {
+                buttonsContainer.innerHTML = `
+                    <button class="choice-btn" onclick="restartGame()">
+                        🔄 重新开始
+                    </button>
+                `;
+            } else {
+                gameState.choices.forEach(choice => {
+                    const button = createChoiceButton(choice);
+                    buttonsContainer.appendChild(button);
+                });
+            }
+        }
+
+        function createChoiceButton(choice) {
+            const button = document.createElement('button');
+            button.className = 'choice-btn';
+            button.textContent = getChoiceText(choice);
+            button.onclick = () => makeChoice(choice);
+            
+            const icon = getChoiceIcon(choice);
+            if (icon) {
+                button.innerHTML = `${icon} ${button.textContent}`;
+            }
+            
+            return button;
+        }
+
+        function getChoiceText(choice) {
+            const texts = {
+                'left': '向左走',
+                'right': '向右走',
+                'sit down': '坐下',
+                'stand up': '站起来',
+                'restart': '重新开始'
+            };
+            return texts[choice] || choice;
+        }
+
+        function getChoiceIcon(choice) {
+            const icons = {
+                'left': '⬅️',
+                'right': '➡️',
+                'sit down': '🪑',
+                'stand up': '🏃',
+                'restart': '🔄'
+            };
+            return icons[choice] || '';
+        }
+
+        function updateProgress() {
+            let progress = 0;
+            
+            switch (gameState.state) {
+                case 'start':
+                    progress = 0;
+                    break;
+                case 'room':
+                    progress = 33;
+                    break;
+                case 'sitting':
+                    progress = 66;
+                    break;
+                case 'standing':
+                    progress = 100;
+                    break;
+            }
+            
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = `${progress}%`;
+            progressBar.textContent = `${progress}%`;
+        }
+
+        function updateStatusStyle(statusElement) {
+            statusElement.className = 'game-status';
+            
+            if (gameState.state === 'standing' && gameState.message.includes('wizard')) {
+                statusElement.classList.add('success');
+            } else if (gameState.state === 'sitting' || gameState.state === 'standing') {
+                statusElement.classList.add('warning');
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        function startGame() {
+            initGame();
+        }
+
+        document.getElementById('start-game').addEventListener('click', startGame);
+    </script>
+</body>
+</html>
+

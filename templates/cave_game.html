@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}洞穴探险{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <h1 class="game-title">
+        <i class="fas fa-mountain"></i> 洞穴探险
+    </h1>
+    
+    <!-- 游戏状态显示 -->
+    <div id="game-status" class="row">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <h4 id="game-message">准备开始你的冒险...</h4>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 选择按钮区域 -->
+    <div id="choice-buttons" class="text-center">
+        <button id="start-game" class="btn btn-success btn-lg">
+            <i class="fas fa-play"></i> 开始游戏
+        </button>
+    </div>
+    
+    <!-- 游戏进度 -->
+    <div id="game-progress" class="mt-4" style="display: none;">
+        <div class="progress mb-3">
+            <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                 role="progressbar" style="width: 0%"></div>
+        </div>
+        <p class="text-muted text-center">
+            <small>你的冒险进度</small>
+        </p>
+    </div>
+    
+    <!-- 游戏说明 -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-info-circle"></i> 游戏说明</h5>
+                </div>
+                <div class="card-body">
+                    <p>你被困在一个黑暗的洞穴中，需要做出正确的选择来寻找魔法石并成为强大的魔法师。</p>
+                    <ul>
+                        <li><strong>选择方向</strong>：向左或向右探索洞穴</li>
+                        <li><strong>选择动作</strong>：坐下或站起来</li>
+                        <li><strong>寻找魔法石</strong>：只有正确的选择组合才能找到魔法石</li>
+                        <li><strong>成为魔法师</strong>：完成冒险成为强大的魔法师！</li>
+                    </ul>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-lightbulb"></i> 
+                        <strong>提示：</strong> 不同的选择组合会带来不同的结果，试试不同的路径吧！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let gameState = null;
+let progress = 0;
+
+// 初始化游戏
+async function initGame() {
+    try {
+        const response = await fetch('/api/cave/init', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        gameState = await response.json();
+        updateGameDisplay();
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('初始化游戏失败！');
+    }
+}
+
+// 做出选择
+async function makeChoice(choice) {
+    if (!gameState) return;
+    
+    try {
+        const response = await fetch('/api/cave/make_choice', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                choice: choice
+            })
+        });
+        
+        gameState = await response.json();
+        updateGameDisplay();
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('操作失败！');
+    }
+}
+
+// 更新游戏显示
+function updateGameDisplay() {
+    if (!gameState) return;
+    
+    const messageElement = document.getElementById('game-message');
+    const buttonsContainer = document.getElementById('choice-buttons');
+    const progressContainer = document.getElementById('game-progress');
+    
+    messageElement.textContent = gameState.message;
+    
+    // 更新进度条
+    updateProgress();
+    progressContainer.style.display = 'block';
+    
+    // 更新按钮
+    buttonsContainer.innerHTML = '';
+    
+    if (gameState.choices.includes('restart')) {
+        // 游戏结束，显示重新开始按钮
+        buttonsContainer.innerHTML = `
+            <button class="btn btn-primary btn-lg" onclick="restartGame()">
+                <i class="fas fa-redo"></i> 重新开始
+            </button>
+        `;
+    } else {
+        // 显示选择按钮
+        gameState.choices.forEach(choice => {
+            const button = createChoiceButton(choice);
+            buttonsContainer.appendChild(button);
+        });
+    }
+    
+    // 根据状态改变消息样式
+    updateMessageStyle();
+}
+
+// 创建选择按钮
+function createChoiceButton(choice) {
+    const button = document.createElement('button');
+    button.className = 'btn btn-outline-primary btn-lg me-2 mb-2';
+    button.textContent = getChoiceText(choice);
+    button.onclick = () => makeChoice(choice);
+    
+    // 添加图标
+    const icon = getChoiceIcon(choice);
+    if (icon) {
+        button.innerHTML = `<i class="${icon}"></i> ${button.textContent}`;
+    }
+    
+    return button;
+}
+
+// 获取选择文本
+function getChoiceText(choice) {
+    const texts = {
+        'left': '向左走',
+        'right': '向右走',
+        'sit down': '坐下',
+        'stand up': '站起来',
+        'restart': '重新开始'
+    };
+    return texts[choice] || choice;
+}
+
+// 获取选择图标
+function getChoiceIcon(choice) {
+    const icons = {
+        'left': 'fas fa-arrow-left',
+        'right': 'fas fa-arrow-right',
+        'sit down': 'fas fa-chair',
+        'stand up': 'fas fa-running',
+        'restart': 'fas fa-redo'
+    };
+    return icons[choice] || null;
+}
+
+// 更新进度条
+function updateProgress() {
+    let newProgress = 0;
+    
+    switch (gameState.state) {
+        case 'start':
+            newProgress = 0;
+            break;
+        case 'room':
+            newProgress = 33;
+            break;
+        case 'sitting':
+            newProgress = 66;
+            break;
+        case 'standing':
+            newProgress = 100;
+            break;
+    }
+    
+    progress = newProgress;
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = `${progress}%`;
+    
+    // 根据进度改变颜色
+    progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated';
+    if (progress === 100) {
+        progressBar.classList.add('bg-success');
+    } else if (progress >= 66) {
+        progressBar.classList.add('bg-warning');
+    } else {
+        progressBar.classList.add('bg-info');
+    }
+}
+
+// 更新消息样式
+function updateMessageStyle() {
+    const messageElement = document.getElementById('game-message');
+    const parentAlert = messageElement.closest('.alert');
+    
+    // 移除所有样式类
+    parentAlert.className = 'alert';
+    
+    // 根据状态添加样式
+    if (gameState.state === 'standing' && gameState.message.includes('wizard')) {
+        parentAlert.classList.add('alert-success');
+        messageElement.innerHTML = `<i class="fas fa-magic"></i> ${gameState.message}`;
+    } else if (gameState.state === 'sitting' || gameState.state === 'standing') {
+        parentAlert.classList.add('alert-warning');
+    } else if (gameState.state === 'room') {
+        parentAlert.classList.add('alert-info');
+    } else {
+        parentAlert.classList.add('alert-primary');
+    }
+}
+
+// 重新开始游戏
+function restartGame() {
+    initGame();
+}
+
+// 开始游戏
+function startGame() {
+    initGame();
+}
+
+// 事件监听器
+document.getElementById('start-game').addEventListener('click', startGame);
+</script>
+{% endblock %}
+

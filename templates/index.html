@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}游戏合集 - 首页{% endblock %}
+
+{% block content %}
+<div class="game-container">
+    <h1 class="game-title">
+        <i class="fas fa-gamepad"></i> 欢迎来到游戏合集！
+    </h1>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card h-100" style="border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="card-body text-center">
+                    <i class="fas fa-sword fa-3x text-primary mb-3"></i>
+                    <h3 class="card-title">RPG战斗模拟器</h3>
+                    <p class="card-text">
+                        体验经典的回合制RPG战斗！选择你的角色职业，与其他玩家进行激烈的战斗。
+                        战士拥有高血量和暴击能力，法师拥有强大的法术攻击。
+                    </p>
+                    <a href="/rpg" class="btn btn-primary btn-lg">
+                        <i class="fas fa-play"></i> 开始战斗
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card h-100" style="border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="card-body text-center">
+                    <i class="fas fa-mountain fa-3x text-success mb-3"></i>
+                    <h3 class="card-title">洞穴探险</h3>
+                    <p class="card-text">
+                        在神秘的洞穴中展开冒险！做出正确的选择，寻找传说中的魔法石，
+                        成为强大的魔法师。每一次选择都可能改变你的命运。
+                    </p>
+                    <a href="/cave" class="btn btn-success btn-lg">
+                        <i class="fas fa-play"></i> 开始探险
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <h4 class="alert-heading">
+                    <i class="fas fa-info-circle"></i> 游戏特色
+                </h4>
+                <ul class="mb-0">
+                    <li><strong>RPG战斗模拟器</strong>：基于面向对象编程设计，包含继承、多态等高级特性</li>
+                    <li><strong>洞穴探险</strong>：简单的文字冒险游戏，体验不同的选择带来的不同结局</li>
+                    <li><strong>现代化界面</strong>：响应式设计，支持各种设备访问</li>
+                    <li><strong>实时交互</strong>：无需刷新页面即可进行游戏</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

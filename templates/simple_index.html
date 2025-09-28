@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏合集</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav a {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            margin: 0 10px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        .game-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .rpg-icon { color: #e74c3c; }
+        .cave-icon { color: #27ae60; }
+        .game-title {
+            font-size: 1.8em;
+            margin: 15px 0;
+            color: #2c3e50;
+        }
+        .game-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .play-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .features {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            color: white;
+        }
+        .features h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .features li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 游戏合集</h1>
+            <p>欢迎来到Python游戏世界！</p>
+        </div>
+        
+        <div class="nav">
+            <a href="/">🏠 首页</a>
+            <a href="/rpg">⚔️ RPG战斗</a>
+            <a href="/cave">🏔️ 洞穴探险</a>
+        </div>
+        
+        <div class="games-grid">
+            <div class="game-card">
+                <div class="game-icon rpg-icon">⚔️</div>
+                <h2 class="game-title">RPG战斗模拟器</h2>
+                <p class="game-description">
+                    体验经典的回合制RPG战斗！选择你的角色职业，与其他玩家进行激烈的战斗。
+                    战士拥有高血量和暴击能力，法师拥有强大的法术攻击。
+                </p>
+                <a href="/rpg" class="play-button">开始战斗</a>
+            </div>
+            
+            <div class="game-card">
+                <div class="game-icon cave-icon">🏔️</div>
+                <h2 class="game-title">洞穴探险</h2>
+                <p class="game-description">
+                    在神秘的洞穴中展开冒险！做出正确的选择，寻找传说中的魔法石，
+                    成为强大的魔法师。每一次选择都可能改变你的命运。
+                </p>
+                <a href="/cave" class="play-button">开始探险</a>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>🌟 游戏特色</h3>
+            <ul>
+                <li><strong>RPG战斗模拟器</strong>：基于面向对象编程设计，包含继承、多态等高级特性</li>
+                <li><strong>洞穴探险</strong>：简单的文字冒险游戏，体验不同的选择带来的不同结局</li>
+                <li><strong>现代化界面</strong>：响应式设计，支持各种设备访问</li>
+                <li><strong>实时交互</strong>：无需刷新页面即可进行游戏</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
