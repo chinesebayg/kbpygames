@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Web Games Collection</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        .game-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .rpg-icon { color: #e74c3c; }
+        .cave-icon { color: #27ae60; }
+        .game-title {
+            font-size: 1.8em;
+            margin: 15px 0;
+            color: #2c3e50;
+        }
+        .game-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .play-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .features {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            color: white;
+        }
+        .features h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .features li:last-child {
+            border-bottom: none;
+        }
+        .note {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Python Web Games Collection</h1>
+            <p>Welcome to the Python Game World!</p>
+        </div>
+        
+        <div class="note">
+            <strong>📢 Note:</strong> This is a static demo version. For the full interactive experience with RPG battles and cave adventures, please run the local server version or deploy to Railway/Render.
+        </div>
+        
+        <div class="games-grid">
+            <div class="game-card">
+                <div class="game-icon rpg-icon">⚔️</div>
+                <h2 class="game-title">RPG Battle Simulator</h2>
+                <p class="game-description">
+                    Experience classic turn-based RPG combat! Choose your character class and engage in intense battles.
+                    Warriors have high HP and critical hits, while Mages have powerful spells.
+                </p>
+                <a href="rpg.html" class="play-button">Start Battle</a>
+            </div>
+            
+            <div class="game-card">
+                <div class="game-icon cave-icon">🏔️</div>
+                <h2 class="game-title">Cave Adventure</h2>
+                <p class="game-description">
+                    Embark on a mysterious cave adventure! Make the right choices to find the legendary magic stone
+                    and become a powerful wizard. Every choice can change your fate.
+                </p>
+                <a href="cave.html" class="play-button">Start Adventure</a>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>🌟 Game Features</h3>
+            <ul>
+                <li><strong>RPG Battle Simulator</strong>: Object-oriented programming with inheritance and polymorphism</li>
+                <li><strong>Cave Adventure</strong>: Simple text adventure with multiple endings</li>
+                <li><strong>Modern Interface</strong>: Responsive design supporting all devices</li>
+                <li><strong>Real-time Interaction</strong>: No page refresh required for gameplay</li>
+            </ul>
+        </div>
+        
+        <div class="features">
+            <h3>🚀 How to Run Locally</h3>
+            <ul>
+                <li><strong>Clone the repository</strong>: <code>git clone https://github.com/chinesebayg/kbpygames.git</code></li>
+                <li><strong>Run the server</strong>: <code>python simple_web_games.py</code></li>
+                <li><strong>Open browser</strong>: Visit <code>http://localhost:8000</code></li>
+                <li><strong>Enjoy the games</strong>: Full interactive experience with all features!</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

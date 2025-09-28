@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Battle Simulator</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin: 0;
+        }
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav a {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        .demo-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            color: #856404;
+        }
+        .character-creation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .character-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+        .character-form h3 {
+            color: #495057;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .characters-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .character-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .character-card h4 {
+            margin-top: 0;
+        }
+        .hp-bar {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+        .battle-controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .battle-log {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border-left: 4px solid #667eea;
+        }
+        .battle-log h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .log-entry {
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+        .game-over {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔️ RPG Battle Simulator</h1>
+        </div>
+        
+        <div class="nav">
+            <a href="index.html">🏠 Home</a>
+            <a href="rpg.html">⚔️ RPG Battle</a>
+            <a href="cave.html">🏔️ Cave Adventure</a>
+        </div>
+        
+        <div class="demo-notice">
+            <h3>🎮 Demo Version</h3>
+            <p>This is a static demo version. For the full interactive experience with real-time battles, character creation, and dynamic combat, please run the local server:</p>
+            <p><strong>Local Server:</strong> <code>python simple_web_games.py</code> then visit <code>http://localhost:8000</code></p>
+        </div>
+        
+        <div class="character-creation">
+            <div class="character-form">
+                <h3>👤 Player 1</h3>
+                <div class="form-group">
+                    <label for="player1-name">Character Name:</label>
+                    <input type="text" id="player1-name" placeholder="Enter character name" value="Warrior Hero">
+                </div>
+                <div class="form-group">
+                    <label for="player1-class">Class:</label>
+                    <select id="player1-class">
+                        <option value="warrior" selected>Warrior (High HP, Medium Damage)</option>
+                        <option value="mage">Mage (Low HP, High Damage)</option>
+                    </select>
+                </div>
+                <button id="create-player1" class="btn">Create Character</button>
+            </div>
+            
+            <div class="character-form">
+                <h3>👤 Player 2</h3>
+                <div class="form-group">
+                    <label for="player2-name">Character Name:</label>
+                    <input type="text" id="player2-name" placeholder="Enter character name" value="Mage Wizard">
+                </div>
+                <div class="form-group">
+                    <label for="player2-class">Class:</label>
+                    <select id="player2-class">
+                        <option value="warrior">Warrior (High HP, Medium Damage)</option>
+                        <option value="mage" selected>Mage (Low HP, High Damage)</option>
+                    </select>
+                </div>
+                <button id="create-player2" class="btn">Create Character</button>
+            </div>
+        </div>
+        
+        <div id="characters-display" class="characters-display hidden">
+            <div id="player1-card" class="character-card">
+                <h4 id="player1-name-display"></h4>
+                <div class="hp-bar">
+                    <div id="player1-hp" class="hp-fill" style="width: 100%;"></div>
+                </div>
+                <p id="player1-info"></p>
+            </div>
+            <div id="player2-card" class="character-card">
+                <h4 id="player2-name-display"></h4>
+                <div class="hp-bar">
+                    <div id="player2-hp" class="hp-fill" style="width: 100%;"></div>
+                </div>
+                <p id="player2-info"></p>
+            </div>
+        </div>
+        
+        <div id="battle-controls" class="battle-controls hidden">
+            <button id="start-battle" class="btn">🔥 Start Battle!</button>
+            <button id="reset-game" class="btn">🔄 Reset Game</button>
+        </div>
+        
+        <div id="battle-log" class="battle-log hidden">
+            <h4>📜 Battle Log</h4>
+            <div id="log-content"></div>
+        </div>
+        
+        <div id="game-over" class="game-over hidden">
+            <div class="alert alert-success">
+                <h2 id="winner-message"></h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let characters = {};
+        let battleRound = 0;
+
+        function createCharacter(playerNum) {
+            const name = document.getElementById(`player${playerNum}-name`).value;
+            const charClass = document.getElementById(`player${playerNum}-class`).value;
+            
+            if (!name) {
+                alert('Please enter a character name!');
+                return;
+            }
+            
+            // Create character object
+            const character = {
+                name: name,
+                character_class: charClass === 'warrior' ? '战士' : '法师',
+                hp: charClass === 'warrior' ? 120 : 80,
+                max_hp: charClass === 'warrior' ? 120 : 80,
+                damage: charClass === 'warrior' ? 25 : 35,
+                is_alive: true
+            };
+            
+            characters[name] = character;
+            updateCharacterDisplay(playerNum, character);
+            
+            if (Object.keys(characters).length === 2) {
+                document.getElementById('characters-display').classList.remove('hidden');
+                document.getElementById('battle-controls').classList.remove('hidden');
+            }
+        }
+
+        function updateCharacterDisplay(playerNum, character) {
+            const nameDisplay = document.getElementById(`player${playerNum}-name-display`);
+            const hpBar = document.getElementById(`player${playerNum}-hp`);
+            const info = document.getElementById(`player${playerNum}-info`);
+            
+            nameDisplay.textContent = `${character.name} (${character.character_class})`;
+            const hpPercentage = (character.hp / character.max_hp) * 100;
+            hpBar.style.width = `${hpPercentage}%`;
+            
+            if (hpPercentage < 30) {
+                hpBar.classList.add('low');
+            } else {
+                hpBar.classList.remove('low');
+            }
+            
+            info.innerHTML = `
+                HP: ${character.hp}/${character.max_hp}<br>
+                Status: ${character.is_alive ? 'Alive' : 'Dead'}
+            `;
+        }
+
+        function startBattle() {
+            const characterNames = Object.keys(characters);
+            if (characterNames.length !== 2) {
+                alert('Need to create two characters to start battle!');
+                return;
+            }
+            
+            document.getElementById('battle-log').classList.remove('hidden');
+            document.getElementById('start-battle').disabled = true;
+            
+            battleRound = 0;
+            simulateBattle();
+        }
+
+        function simulateBattle() {
+            const characterNames = Object.keys(characters);
+            const player1 = characters[characterNames[0]];
+            const player2 = characters[characterNames[1]];
+            
+            if (!player1.is_alive || !player2.is_alive) {
+                endGame();
+                return;
+            }
+            
+            battleRound++;
+            addToLog(`<strong>Round ${battleRound}</strong>`);
+            
+            // Simulate battle rounds
+            let round = 0;
+            const maxRounds = 10;
+            
+            const battleInterval = setInterval(() => {
+                if (round >= maxRounds || !player1.is_alive || !player2.is_alive) {
+                    clearInterval(battleInterval);
+                    endGame();
+                    return;
+                }
+                
+                // Simulate attacks
+                const damage1 = Math.floor(Math.random() * 30) + 10;
+                const damage2 = Math.floor(Math.random() * 30) + 10;
+                
+                player1.hp = Math.max(0, player1.hp - damage2);
+                player2.hp = Math.max(0, player2.hp - damage1);
+                
+                if (player1.hp <= 0) player1.is_alive = false;
+                if (player2.hp <= 0) player2.is_alive = false;
+                
+                addToLog(`${player2.name} attacks ${player1.name} for ${damage2} damage!`);
+                addToLog(`${player1.name} attacks ${player2.name} for ${damage1} damage!`);
+                
+                updateCharacterDisplay(1, player1);
+                updateCharacterDisplay(2, player2);
+                
+                round++;
+            }, 1000);
+        }
+
+        function endGame() {
+            const characterNames = Object.keys(characters);
+            const player1 = characters[characterNames[0]];
+            const player2 = characters[characterNames[1]];
+            
+            let winner = null;
+            if (!player1.is_alive && !player2.is_alive) {
+                winner = "It's a draw!";
+            } else if (!player1.is_alive) {
+                winner = player2.name;
+            } else if (!player2.is_alive) {
+                winner = player1.name;
+            }
+            
+            if (winner) {
+                document.getElementById('winner-message').textContent = `🏆 Battle Over! ${winner} wins!`;
+                document.getElementById('game-over').classList.remove('hidden');
+            }
+        }
+
+        function resetGame() {
+            characters = {};
+            battleRound = 0;
+            
+            document.getElementById('player1-name').value = 'Warrior Hero';
+            document.getElementById('player1-class').value = 'warrior';
+            document.getElementById('player2-name').value = 'Mage Wizard';
+            document.getElementById('player2-class').value = 'mage';
+            
+            document.getElementById('characters-display').classList.add('hidden');
+            document.getElementById('battle-controls').classList.add('hidden');
+            document.getElementById('battle-log').classList.add('hidden');
+            document.getElementById('game-over').classList.add('hidden');
+            
+            document.getElementById('start-battle').disabled = false;
+            document.getElementById('log-content').innerHTML = '';
+        }
+
+        function addToLog(message) {
+            const logContent = document.getElementById('log-content');
+            logContent.innerHTML += `<div class="log-entry">${message}</div>`;
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        document.getElementById('create-player1').addEventListener('click', () => createCharacter(1));
+        document.getElementById('create-player2').addEventListener('click', () => createCharacter(2));
+        document.getElementById('start-battle').addEventListener('click', startBattle);
+        document.getElementById('reset-game').addEventListener('click', resetGame);
+    </script>
+</body>
+</html>

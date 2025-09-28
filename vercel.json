@@ -1,15 +1,18 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "simple_web_games.py",
-      "use": "@vercel/python"
-    }
-  ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "simple_web_games.py"
+      "src": "/rpg",
+      "dest": "/rpg.html"
+    },
+    {
+      "src": "/cave",
+      "dest": "/cave.html"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
     }
   ]
 }
+
